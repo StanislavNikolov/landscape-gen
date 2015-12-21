@@ -16,7 +16,7 @@ int rnd(int n)
 	return (dist(eng) % n) - (dist(eng) % n);
 }
 
-void generate(unsigned x, unsigned y, unsigned sx, unsigned sy)
+void generate(unsigned x, unsigned y, unsigned size)
 {
 	/* Corners:
 	 * 0###1
@@ -26,33 +26,33 @@ void generate(unsigned x, unsigned y, unsigned sx, unsigned sy)
 	 */
 	int c[4];
 	c[0] = world[x][y];
-	c[1] = world[x+sx][y];
-	c[2] = world[x][y+sy];
-	c[3] = world[x+sx][y+sy];
+	c[1] = world[x+size][y];
+	c[2] = world[x][y+size];
+	c[3] = world[x+size][y+size];
 
-	if(world[x+sx/2][y+sy/2] == 0)
-		world[x+sx/2][y+sy/2] = (c[0] + c[1] + c[2] + c[3]) / 4 + rnd(maxDiamondStepError);
+	if(world[x+size/2][y+size/2] == 0)
+		world[x+size/2][y+size/2] = (c[0] + c[1] + c[2] + c[3]) / 4 + rnd(maxDiamondStepError);
 
-	int cen = world[x+sx/2][y+sy/2];
+	int cen = world[x+size/2][y+size/2];
 
-	if(world[x+sx/2][y] == 0)
-		world[x+sx/2][y] = (cen + c[0] + c[1]) / 3 + rnd(maxSquareStepError);
+	if(world[x+size/2][y] == 0)
+		world[x+size/2][y] = (cen + c[0] + c[1]) / 3 + rnd(maxSquareStepError);
 
-	if(world[x][y+sy/2] == 0)
-		world[x][y+sy/2] = (cen + c[0] + c[2]) / 3 + rnd(maxSquareStepError);
+	if(world[x][y+size/2] == 0)
+		world[x][y+size/2] = (cen + c[0] + c[2]) / 3 + rnd(maxSquareStepError);
 
-	if(world[x+sx][y+sy/2] == 0)
-		world[x+sx][y+sy/2] = (cen + c[1] + c[3]) / 3 + rnd(maxSquareStepError);
+	if(world[x+size][y+size/2] == 0)
+		world[x+size][y+size/2] = (cen + c[1] + c[3]) / 3 + rnd(maxSquareStepError);
 
-	if(world[x+sx/2][y+sy] == 0)
-		world[x+sx/2][y+sy] = (cen + c[2] + c[3]) / 3 + rnd(maxSquareStepError);
+	if(world[x+size/2][y+size] == 0)
+		world[x+size/2][y+size] = (cen + c[2] + c[3]) / 3 + rnd(maxSquareStepError);
 
-	if(sx >= 4)
+	if(size >= 4)
 	{
-		generate(x, y, sx/2, sy/2);
-		generate(x+sx/2, y, sx/2, sy/2);
-		generate(x, y+sy/2, sx/2, sy/2);
-		generate(x+sx/2, y+sy/2, sx/2, sy/2);
+		generate(x, y, size/2);
+		generate(x+size/2, y, size/2);
+		generate(x, y+size/2, size/2);
+		generate(x+size/2, y+size/2, size/2);
 	}
 }
 
@@ -73,7 +73,7 @@ int main()
 
 	std::cout << "Generating the image..." << std::endl;
 
-	generate(0, 0, worldSize-1, worldSize-1);
+	generate(0, 0, worldSize-1);
 
 	//               water/ocean|sand|grass|forest|hills|snow
 	int layerLevel[] = {30, 60, 90, 100, 140, 180, 220, 256};
